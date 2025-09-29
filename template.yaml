@@ -1,0 +1,26 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Vanity Numbers Project
+
+Resources:
+  VanityTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: VanityNumbers
+      AttributeDefinitions:
+        - AttributeName: callerNumber
+          AttributeType: S
+      KeySchema:
+        - AttributeName: callerNumber
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+
+  VanityLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: .
+      Handler: handler.lambda_handler
+      Runtime: python3.13
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: VanityNumbers
